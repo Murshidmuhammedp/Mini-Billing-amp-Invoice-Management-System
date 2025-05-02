@@ -52,12 +52,13 @@ A full-stack web application that allows users to manage customers, products, an
 ```bash
 git clone https://github.com/Murshidmuhammedp/Mini-Billing-amp-Invoice-Management-System
 cd Mini-Billing-amp-Invoice-Management-System
-
+```
 2. Backend Setup
 
+```bash
 cd server
 npm install
-
+```
 Create a .env file in /server:
 
 PORT=5000
