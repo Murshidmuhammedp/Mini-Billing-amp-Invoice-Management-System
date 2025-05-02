@@ -37,7 +37,7 @@ const Sidebar = ({ sidebarOpen, toggleSidebar }) => {
                         {sidebarOpen && <span className="w-full">Customers</span>}
                     </li>
                 </Link>
-                <Link to={'/admin/doctorlist'}>
+                <Link to={'/products'}>
                     <li className="p-4 hover:bg-gray-200 cursor-pointer flex items-center">
                         <FaBoxOpen className="mr-4 text-gray-800" />
                         {sidebarOpen && <span className="w-full">Products</span>}

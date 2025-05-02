@@ -3,24 +3,18 @@ import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import customAxios from '../../api/axiosInstance';
 
-const Customers = () => {
-    const headline = ["Sl. No", "Name", "Email", "Mobile", "Location", "Action"]
+const Products = () => {
+    const headline = ["Sl. No", "Product Name", "Description", "Quantity", "Price", "Action"]
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [customers, setCustomers] = useState([]);
+    const [products, setProducts] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [editingId, setEditingId] = useState(null);
     const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        mobileNumber: '',
-        address: {
-            street: '',
-            city: '',
-            state: '',
-            zipCode: '',
-            country: ''
-        }
+        productName: '',
+        description: '',
+        quantity: '',
+        price: ' '
     });
     const token = localStorage.getItem("token");
 
@@ -30,19 +24,19 @@ const Customers = () => {
     };
 
     useEffect(() => {
-        const fetchCustomers = async () => {
-            await customAxios.get('/api/customer/customers')
+        const fetchProducts = async () => {
+            await customAxios.get('/api/product/products')
                 .then((result) => {
-                    setCustomers(result.data.customers)
+                    setProducts(result.data.products)
                 }).catch((error) => {
                     console.log(error);
                 })
         }
-        fetchCustomers();
+        fetchProducts();
     }, []);
 
     const toggleBlock = async (id) => {
-        await customAxios.patch(`/api/customer/block/${id}`)
+        await customAxios.patch(`/api/product/islisted/${id}`)
             .then((result) => {
                 alert(result.data.message)
             }).catch((error) => {
@@ -50,84 +44,58 @@ const Customers = () => {
             })
     };
 
-    const handleAddCustomer = () => {
+    const handleAddProduct = () => {
         setIsEdit(false);
         setFormData({
-            name: '',
-            email: '',
-            mobileNumber: '',
-            address: {
-                street: '',
-                city: '',
-                state: '',
-                zipCode: '',
-                country: ''
-            },
+            productName: '',
+            description: '',
+            quantity: '',
+            price: '',
         });
         setShowForm(true);
     };
 
-    const handleEditCustomer = (user) => {
+    const handleEditProduct = (product) => {
         setIsEdit(true);
-        setEditingId(user._id);
+        setEditingId(product._id);
         setFormData({
-            name: user.name,
-            email: user.email,
-            mobileNumber: user.mobileNumber,
-            address: {
-                street: user.address.street,
-                city: user.address.city,
-                state: user.address.state,
-                zipCode: user.address.zipCode,
-                country: user.address.country
-            }
+            productName: product.productName,
+            description: product.description,
+            quantity: product.quantity,
+            price: product.price
         });
         setShowForm(true);
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-
-        const addressFields = ['street', 'city', 'state', 'zipCode', 'country'];
-
-        if (addressFields.includes(name)) {
-            setFormData((prev) => ({
-                ...prev,
-                address: {
-                    ...prev.address,
-                    [name]: value
-                }
-            }));
-        } else {
             setFormData((prev) => ({
                 ...prev,
                 [name]: value
             }));
-        }
     };
 
-
     const handleSubmit = async () => {
-        const { name, email, mobileNumber, address } = formData;
-        if (!name || !email || !mobileNumber || !address.street || !address.city || !address.state || !address.zipCode || !address.country) {
+        const { productName, description, quantity, price } = formData;
+        if (!productName || !description || !quantity || !price) {
             alert("All fields are required");
             return;
         }
         try {
             if (isEdit) {
-                await customAxios.put(`/api/customer/updatecustomer/${editingId}`, formData, {
+                await customAxios.put(`/api/product/updateproduct/${editingId}`, formData, {
                     headers: {
                         Authorization: token
                     }
                 });
-                alert("Customer updated successfully");
+                alert("Product updated successfully");
             } else {
-                await customAxios.post('/api/customer/addcustomer', formData, {
+                await customAxios.post('/api/product/addproduct', formData, {
                     headers: {
                         Authorization: token
                     }
                 });
-                alert("Customer added successfully");
+                alert("Product added successfully");
             }
             setShowForm(false);
             window.location.reload();
@@ -149,11 +117,11 @@ const Customers = () => {
 
                     <div className="bg-white shadow-md rounded-lg p-6">
                         <div className='flex justify-between'>
-                            <h3 className="text-xl font-bold mb-4">Customers</h3>
+                            <h3 className="text-xl font-bold mb-4">Products</h3>
                             <button
-                                onClick={handleAddCustomer}
+                                onClick={handleAddProduct}
                                 className='bg-blue-500 rounded text-white w-[150px] hover:bg-blue-600'>
-                                Add Customer
+                                Add Product
                             </button>
                         </div>
                         <table className="min-w-full bg-white border-collapse">
@@ -165,26 +133,26 @@ const Customers = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {customers && customers.map((user, index) => (
-                                    <tr key={user._id}>
+                                {products && products.map((product, index) => (
+                                    <tr key={product._id}>
                                         <td className="py-2 px-4 border-b">{index + 1}</td>
-                                        <td className="py-2 px-4 border-b">{user.name}</td>
-                                        <td className="py-2 px-4 border-b">{user.email}</td>
-                                        <td className="py-2 px-4 border-b">{user.mobileNumber}</td>
-                                        <td className="py-2 px-4 border-b">{user.address.city},{user.address.state}</td>
+                                        <td className="py-2 px-4 border-b">{product.productName}</td>
+                                        <td className="py-2 px-4 border-b">{product.description}</td>
+                                        <td className="py-2 px-4 border-b">{product.quantity}</td>
+                                        <td className="py-2 px-4 border-b">{product.price}</td>
                                         <td className="py-2 px-4 border-b">
                                             <button
-                                                onClick={() => handleEditCustomer(user)}
+                                                onClick={() => handleEditProduct(product)}
                                                 className={"py-1 px-3 rounded bg-blue-500 text-white hover:bg-blue-600"}
                                             >
                                                 Edit
                                             </button>
                                             <button
-                                                onClick={() => toggleBlock(user._id)}
-                                                className={`py-1 px-3 rounded ml-4 ${user.isBlocked ? 'bg-red-500 hover:bg-red-700' : 'bg-green-500 hover:bg-green-700'
+                                                onClick={() => toggleBlock(product._id)}
+                                                className={`py-1 px-3 rounded ml-4 ${product.isListed ? 'bg-red-500 hover:bg-red-700' : 'bg-green-500 hover:bg-green-700'
                                                     } text-white`}
                                             >
-                                                {user.isBlocked ? 'Unblock' : 'Block'}
+                                                {product.isListed ? 'Unlisted' : 'Listed'}
                                             </button>
                                         </td>
                                     </tr>
@@ -196,70 +164,38 @@ const Customers = () => {
                     {showForm && (
                         <div className="fixed inset-0 bg-gray-100 bg-opacity-50 flex justify-center items-center z-50">
                             <div className="bg-white p-6 rounded-lg w-full max-w-md shadow-lg">
-                                <h2 className="text-xl font-bold mb-4">{isEdit ? 'Edit Customer' : 'Add Customer'}</h2>
+                                <h2 className="text-xl font-bold mb-4">{isEdit ? 'Edit Product' : 'Add Product'}</h2>
                                 <div className="space-y-3">
                                     <input
                                         type="text"
-                                        name="name"
-                                        value={formData.name}
+                                        name="productName"
+                                        value={formData.productName}
                                         onChange={handleChange}
-                                        placeholder="Name"
-                                        className="w-full border p-2 rounded"
-                                    />
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        placeholder="Email"
+                                        placeholder="Product Name"
                                         className="w-full border p-2 rounded"
                                     />
                                     <input
                                         type="text"
-                                        name="mobileNumber"
-                                        value={formData.mobileNumber}
+                                        name="description"
+                                        value={formData.description}
                                         onChange={handleChange}
-                                        placeholder="Mobile"
+                                        placeholder="Description"
                                         className="w-full border p-2 rounded"
                                     />
                                     <input
-                                        type="text"
-                                        name="street"
-                                        value={formData.address.street}
+                                        type="number"
+                                        name="quantity"
+                                        value={formData.quantity}
                                         onChange={handleChange}
-                                        placeholder="street"
+                                        placeholder="Quantity"
                                         className="w-full border p-2 rounded"
                                     />
                                     <input
-                                        type="text"
-                                        name="city"
-                                        value={formData.address.city}
+                                        type="number"
+                                        name="price"
+                                        value={formData.price}
                                         onChange={handleChange}
-                                        placeholder="City"
-                                        className="w-full border p-2 rounded"
-                                    />
-                                    <input
-                                        type="text"
-                                        name="state"
-                                        value={formData.address.state}
-                                        onChange={handleChange}
-                                        placeholder="State"
-                                        className="w-full border p-2 rounded"
-                                    />
-                                    <input
-                                        type="text"
-                                        name="zipCode"
-                                        value={formData.address.zipCode}
-                                        onChange={handleChange}
-                                        placeholder="ZipCode"
-                                        className="w-full border p-2 rounded"
-                                    />
-                                    <input
-                                        type="text"
-                                        name="country"
-                                        value={formData.address.country}
-                                        onChange={handleChange}
-                                        placeholder="Country"
+                                        placeholder="Price"
                                         className="w-full border p-2 rounded"
                                     />
                                 </div>
@@ -286,4 +222,4 @@ const Customers = () => {
     )
 }
 
-export default Customers
+export default Products;

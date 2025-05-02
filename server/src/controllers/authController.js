@@ -53,7 +53,7 @@ export const loginUser = async (req, res, next) => {
             return res.status(400).json({ success: false, message: "Your account is suspended." });
         };
 
-        const accessToken = Jwt.sign({ id: validUser._id }, process.env.JWT_SECRET_KEY, { expiresIn: "15m" });
+        const accessToken = Jwt.sign({ id: validUser._id }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
             expires: new Date(Date.now() + 60 * 1000)
