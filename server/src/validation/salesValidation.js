@@ -13,13 +13,12 @@ const saleValidationSchema = Joi.object({
   customerId: Joi.string().hex().length(24).optional().allow(null),
 
   paymentMethod: Joi.string()
-    .valid("Cash", "Credit Card", "Debit Card", "UPI")
-    .required(),
+    .valid("Cash", "Credit Card", "Debit Card", "UPI"),
 
   totalPrice: Joi.number().min(0).required(),
 
-  date: Joi.date().optional(), 
-  
+  date: Joi.date().optional(),
+
   isPaid: Joi.boolean().optional(),
 
   isActive: Joi.boolean().optional()

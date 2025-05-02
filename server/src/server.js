@@ -7,6 +7,7 @@ import { authRouter } from './routes/authRoutes.js';
 import { customerRouter } from './routes/customerRoutes.js';
 import { productRouter } from './routes/productRoutes.js';
 import dashboardRouter from './routes/dashboardRoutes.js';
+import salesRouter from './routes/salesRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -15,7 +16,7 @@ connectDB();
 
 app.use(cors({
     origin: "*",
-    methods: ['GET', 'POST', 'PUT','PATCH', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
 }));
@@ -25,6 +26,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/customer', customerRouter);
 app.use('/api/product', productRouter);
 app.use('/api/dashboard', dashboardRouter);
+app.use('/api/sales', salesRouter);
 
 app.use(errorHandler);
 
