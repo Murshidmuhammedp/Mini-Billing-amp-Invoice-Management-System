@@ -4,7 +4,7 @@ import Sidebar from './Sidebar';
 import customAxios from '../../api/axiosInstance';
 
 const SalesInvoice = () => {
-    const tableHeadings = ["Invoice No", "Customer", "Total Amount", "Payment", "Status", "Action"];
+    const tableHeadings = ["Invoice No", "Customer", "Total Amount", "Payment", "Date", "Action"];
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [invoices, setInvoices] = useState([]);
     const [products, setProducts] = useState([]);
@@ -12,17 +12,39 @@ const SalesInvoice = () => {
     const [showForm, setShowForm] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [editingId, setEditingId] = useState(null);
+    const [sales, setSales] = useState([]);
     const [selectedCustomer, setSelectedCustomer] = useState('');
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [invoiceItems, setInvoiceItems] = useState([
         { productId: "", quantity: 1, price: 0, name: "" },
     ]);
+    const [formData, setFormData] = useState({
+        productName: '',
+        description: '',
+        quantity: '',
+    });
     const [paymentStatus, setPaymentStatus] = useState('Unpaid');
     const token = localStorage.getItem("token");
 
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
     };
+
+    useEffect(() => {
+        const fetchSales = async () => {
+            try {
+                const response = await customAxios.get('/api/sales/listSales', {
+                    headers: {
+                        Authorization: token
+                    }
+                })
+                setSales(response.data.sales)
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchSales();
+    }, []);
 
     useEffect(() => {
         const fetchInitialData = async () => {
@@ -45,8 +67,6 @@ const SalesInvoice = () => {
                 ]);
                 setProducts(productRes.data.products);
                 setCustomers(customerRes.data.customers);
-                console.log(productRes.data.products, "sales product kitti");
-                console.log(customerRes.data.customers, "sales customer got it");
             } catch (error) {
                 console.error(error);
             }
@@ -93,24 +113,43 @@ const SalesInvoice = () => {
     const tax = subtotal * 0.10;
     const grandTotal = subtotal + tax;
 
+    const handleEditSales = (sale) => {
+        console.log(sale, "function")
+        setIsEdit(true);
+        setEditingId(sale._id);
+        setFormData({
+            productName: sale.customerId.name,
+            description: sale.description,
+            quantity: sale.quantity,
+        });
+        setShowForm(true);
+    };
+    const handlePayment = async (id) => {
+        console.log(id,"nthaaan")
+        const response = await customAxios.patch(`/api/sales/paymentstatus/${id}`, {
+            headers: {
+                Authorization: token
+            }
+        })
+        console.log(response, "isPaid")
+    }
+
     const handleSubmit = async () => {
         if (!selectedCustomer || invoiceItems.length === 0) {
             alert("Select a customer and at least one product.");
             return;
         }
 
-        const items = invoiceItems.map(item => ({
+        const products = invoiceItems.map(item => ({
             productId: item.productId,
             quantity: item.quantity
         }));
 
         const invoiceData = {
             customerId: selectedCustomer,
-            items: selectedProducts,
-            subtotal,
-            tax,
-            total: grandTotal,
-            status: paymentStatus
+            products,
+            totalPrice: grandTotal,
+            isPaid: paymentStatus
         };
 
         try {
@@ -119,8 +158,10 @@ const SalesInvoice = () => {
                     { headers: { Authorization: token } });
                 alert("Invoice updated successfully");
             } else {
-                await customAxios.post('/api/invoice', invoiceData,
-                    { headers: { Authorization: token } });
+                await customAxios.post('/api/sales/sales', invoiceData, {
+                    headers:
+                        { Authorization: token }
+                });
                 alert("Invoice created successfully");
             }
             setShowForm(false);
@@ -155,30 +196,40 @@ const SalesInvoice = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* {products && products.map((product, index) => (
-                                    <tr key={product._id} className="hover:bg-gray-50">
-                                        <td className="py-3 px-4 border-b">{index + 1}</td>
-                                        <td className="py-3 px-4 border-b">{product.productName}</td>
-                                        <td className="py-3 px-4 border-b">{product.description}</td>
-                                        <td className="py-3 px-4 border-b">{product.quantity}</td>
-                                        <td className="py-3 px-4 border-b">{product.price}</td>
-                                        <td className="py-3 px-4 border-b">
-                                            <button
-                                                onClick={() => handleEditProduct(product)}
-                                                className={"py-1 px-3 rounded bg-blue-500 text-white hover:bg-blue-600"}
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                onClick={() => toggleBlock(product._id)}
-                                                className={`py-1 px-3 rounded ml-4 ${product.isListed ? 'bg-red-500 hover:bg-red-700' : 'bg-green-500 hover:bg-green-700'
+                                {sales && sales.map((sale, index) => {
+                                    const dateOnly = sale.createdAt?.split('T')[0];
+                                    return (
+                                        <tr key={sale._id} className="hover:bg-gray-50">
+                                            <td className="py-3 px-4 border-b">{sale._id}</td>
+                                            <td className="py-3 px-4 border-b">{sale.customerId.name}</td>
+                                            <td className="py-3 px-4 border-b">{sale.totalPrice}</td>
+                                            <td className="py-3 px-4 border-b"> <button
+                                                onClick={() => handlePayment(sale._id)}
+                                                className={`py-1 px-3 rounded ml-4 ${sale.isPaid ? 'bg-green-400 hover:bg-green-500' : 'bg-red-400 hover:bg-red-500'
                                                     } text-white`}
                                             >
-                                                {product.isListed ? 'Unlisted' : 'Listed'}
+                                                {sale.isPaid ? 'Paid' : 'Unpaid'}
                                             </button>
-                                        </td>
-                                    </tr>
-                                ))} */}
+                                            </td>
+                                            <td className="py-3 px-4 border-b">{dateOnly}</td>
+                                            <td className="py-3 px-4 border-b">
+                                                <button
+                                                    onClick={() => handleEditSales(sale)}
+                                                    className={"py-1 px-3 rounded bg-blue-500 text-white hover:bg-blue-600"}
+                                                >
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    onClick={() => toggleBlock(sale._id)}
+                                                    className={`py-1 px-3 rounded ml-4 ${sale.isActive ? 'bg-green-500 hover:bg-green-700' : 'bg-red-500 hover:bg-red-700'
+                                                        } text-white`}
+                                                >
+                                                    {sale.isActive ? 'Active' : 'Unactive'}
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
                             </tbody>
                         </table>
                     </div>

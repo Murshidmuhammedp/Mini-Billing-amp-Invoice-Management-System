@@ -5,7 +5,6 @@ const verifyToken = async (req, res, next) => {
     if (!token) {
         return res.status(403).json({ message: "No token provided.Please Login" });
     }
-
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
         if (!decoded) {
@@ -14,7 +13,7 @@ const verifyToken = async (req, res, next) => {
         req.user = decoded.id;
         next();
     } catch (error) {
-        res.status(401).json({ message: "Unauthorized" });
+        res.status(401).json({ err: error, message: "Unauthorized" });
     }
 };
 

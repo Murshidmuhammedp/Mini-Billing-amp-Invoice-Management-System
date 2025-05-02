@@ -12,7 +12,7 @@ const SaleSchema = new mongoose.Schema(
         customerId: { type: mongoose.Schema.Types.ObjectId, ref: "Customer", required: false },
         paymentMethod: { type: String, enum: ["Cash", "Credit Card", "Debit Card", "UPI"] },
         totalPrice: { type: Number, required: true },
-        isPaid: { type: Boolean, default: false },
+        isPaid: { type: Boolean, default: true },
         isActive: { type: Boolean, default: true },
     },
     { timestamps: true }

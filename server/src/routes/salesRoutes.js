@@ -1,9 +1,12 @@
 import { Router } from "express";
-import { salesInvoice } from "../controllers/salesController";
-import verifyToken from "../middlewares/jwtAuthValidation";
+import { addInvoice, deleteSale, getAllSales, updateSaleIsPaid } from "../controllers/salesController.js";
+import verifyToken from "../middlewares/jwtAuthValidation.js";
 
 const salesRouter = Router();
 
-salesRouter.post('/sales', verifyToken, salesInvoice)
+salesRouter.post('/sales', verifyToken, addInvoice);
+salesRouter.get('/listSales', verifyToken, getAllSales);
+salesRouter.delete('/deletesale', verifyToken, deleteSale);
+salesRouter.patch('/paymentstatus/:id', updateSaleIsPaid)
 
 export default salesRouter;
