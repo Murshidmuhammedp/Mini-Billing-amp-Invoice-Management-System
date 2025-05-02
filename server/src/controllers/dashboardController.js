@@ -12,7 +12,6 @@ export const getDashboardData = async (req, res, next) => {
             { $match: { userId } },
             { $group: { _id: null, total: { $sum: "$totalPrice" } } }
         ]);
-
         const monthlySales = await Sale.aggregate([
             { $match: { userId } },
             {

@@ -1,10 +1,14 @@
 import React from 'react';
-import { FaTachometerAlt, FaUsers, FaUserTie, FaRegStar, FaClipboardList, FaBell, FaSignOutAlt, FaBars, FaHandHoldingHeart } from 'react-icons/fa';
+import { FaTachometerAlt, FaUsers, FaClipboardList, FaSignOutAlt, FaBars, FaBoxOpen } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Sidebar = ({ sidebarOpen, toggleSidebar }) => {
 
     const navigate = useNavigate();
+
+    const handleLogout = () => {
+        console.log("Logging out...");
+    };
 
     return (
         <div className={`bg-gray-100 text-gray-800 flex flex-col transition-width duration-300 ${sidebarOpen ? 'w-64' : 'w-20'} shadow-md `}>
@@ -21,43 +25,36 @@ const Sidebar = ({ sidebarOpen, toggleSidebar }) => {
             )}
             {/* Sidebar Menu */}
             <ul className="list-none p-0 flex-1">
-                <Link to={'/admin/home/dashboard'}>
+                <Link to={'/dashboard'}>
                     <li className="p-4 hover:bg-gray-200 cursor-pointer flex items-center">
                         <FaTachometerAlt className="mr-4 text-gray-800" />
                         {sidebarOpen && <span className="w-full">Dashboard</span>}
                     </li>
                 </Link>
-                <Link to={'/admin/userlist'}>
+                <Link to={'/customers'}>
                     <li className="p-4 hover:bg-gray-200 cursor-pointer flex items-center">
                         <FaUsers className="mr-4 text-gray-800" />
-                        {sidebarOpen && <span className="w-full">User's List</span>}
+                        {sidebarOpen && <span className="w-full">Customers</span>}
                     </li>
                 </Link>
                 <Link to={'/admin/doctorlist'}>
                     <li className="p-4 hover:bg-gray-200 cursor-pointer flex items-center">
-                        <FaUserTie className="mr-4 text-gray-800" />
-                        {sidebarOpen && <span className="w-full">Doctor's List</span>}
-                    </li>
-                </Link>
-                <Link to={'/admin/pendingrequest'}>
-                    <li className="p-4 hover:bg-gray-200 cursor-pointer flex items-center">
-                        <FaUserTie className="mr-4 text-gray-800" />
-                        {sidebarOpen && <span className="w-full">Pending Request</span>}
-                    </li>
-                </Link>
-                <Link to={'/admin/blooddonors'}>
-                    <li className="p-4 hover:bg-gray-200 cursor-pointer flex items-center">
-                        <FaHandHoldingHeart className="mr-4 text-gray-800" />
-                        {sidebarOpen && <span className="w-full">Blood Donor's List</span>}
+                        <FaBoxOpen className="mr-4 text-gray-800" />
+                        {sidebarOpen && <span className="w-full">Products</span>}
                     </li>
                 </Link>
                 <Link to={''}>
                     <li className="p-4 hover:bg-gray-200 cursor-pointer flex items-center">
                         <FaClipboardList className="mr-4 text-gray-800" />
-                        {sidebarOpen && <span className="w-full">Blood Request</span>}
+                        {sidebarOpen && <span className="w-full">Sales</span>}
                     </li>
                 </Link>
-                <li className="p-4 hover:bg-gray-200 cursor-pointer flex items-center" onClick={() => { navigate('/admin/login'); localStorage.clear(); }}>
+                <li className="p-4 hover:bg-gray-200 cursor-pointer flex items-center"
+                    onClick={() => {
+                        localStorage.clear();
+                        handleLogout();
+                        navigate('/');
+                    }}>
                     <FaSignOutAlt className="mr-4 text-gray-800" />
                     {sidebarOpen && <span className="w-full">Logout</span>}
                 </li>

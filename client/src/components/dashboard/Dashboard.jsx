@@ -12,38 +12,26 @@ Chart.register(ArcElement, Tooltip, Legend);
 
 const Dashboard = () => {
 
-    const [dashboardlist, setdocdashboard] = useState([]);
-    const [userdashboard, setuserdashboard] = useState([]);
-    const [hospitaldashboard, sethospitaldashboard] = useState([]);
-    const [donordashboard, setdonordashboard] = useState([]);
+    const [dashboard, setDashboardData] = useState([]);
+    const [dashboardlist, setdashboardlist] = useState([]);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [filter, setFilter] = useState('Monthly');
-    const tableheading = ["Sl.No", "Name", "Doctor Id", "Specialization", "Phone Number", "District"];
+    const tableheading = ["Sl.No", "Product Name", "Description", "Quantity", "Price"];
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
     };
-
+    const token = localStorage.getItem("token");
     useEffect(() => {
-        const doctordashboard = async () => {
-            const result = await customAxios.get('/admin/api/doctors/data/dashboard')
-            setdocdashboard(result.data.data);
+        const dashboardData = async () => {
+            const response = await customAxios.get('/api/dashboard/dashboard-data', {
+                headers: {
+                    Authorization: token
+                }
+            });
+            setDashboardData(response.data.data);
+            console.log(response.data.data, "dashboard kitti")
         }
-        doctordashboard();
-        const userdashboard = async () => {
-            const result = await customAxios.get('/admin/api/userdata')
-            setuserdashboard(result.data.data);
-        }
-        userdashboard();
-        const hospitaldashboard = async () => {
-            const result = await customAxios.get('/admin/api/hospital/data/dashboard')
-            sethospitaldashboard(result.data.data);
-        }
-        hospitaldashboard();
-        const donordashboard = async () => {
-            const result = await customAxios.get('/admin/api/blood/donors')
-            setdonordashboard(result.data.data);
-        }
-        donordashboard();
+        dashboardData();
     }, []);
 
     const getFilteredData = () => {
@@ -78,42 +66,6 @@ const Dashboard = () => {
                                 const gradient = ctx.createLinearGradient(0, 0, 0, 300);
                                 gradient.addColorStop(0, 'rgba(56, 178, 172, 0.7)');
                                 gradient.addColorStop(1, 'rgba(56, 178, 172, 0.1)');
-                                return gradient;
-                            },
-                            pointBackgroundColor: '#38b2ac',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: '#38b2ac',
-                            fill: true,
-                        },
-                    ],
-                };
-            case 'Weekly':
-                return {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [
-                        {
-                            label: 'Moderate',
-                            data: [1100, 1400, 1700, 2100, 2500, 2800, 3200],
-                            borderColor: 'rgba(76, 81, 191, 1)',
-                            backgroundColor: (context) => {
-                                const ctx = context.chart.ctx;
-                                const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-                                return gradient;
-                            },
-                            pointBackgroundColor: '#4c51bf',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: '#4c51bf',
-                            fill: true,
-                        },
-                        {
-                            label: 'Spike Admin',
-                            data: [1000, 1300, 1600, 1900, 2200, 2500, 2800],
-                            borderColor: 'rgba(56, 178, 172, 1)',
-                            backgroundColor: (context) => {
-                                const ctx = context.chart.ctx;
-                                const gradient = ctx.createLinearGradient(0, 0, 0, 300);
                                 return gradient;
                             },
                             pointBackgroundColor: '#38b2ac',
@@ -242,70 +194,6 @@ const Dashboard = () => {
         },
     };
 
-    const pieData = {
-        labels: ['2022', '2021', '2020'],
-        datasets: [
-            {
-                data: [300000, 150000, 50000],
-                backgroundColor: ['#4c6ef5', '#22d3ee', '#10b981'], // Temporary colors, will be replaced by gradients
-            },
-        ],
-    };
-
-    const pieOptions = {
-        maintainAspectRatio: false,
-        responsive: true,
-        plugins: {
-            legend: {
-                labels: {
-                    color: '#1f2937',
-                },
-            },
-            tooltip: {
-                enabled: true,
-            },
-            beforeDraw: (chart) => {
-                const { width, height, ctx } = chart;
-                ctx.restore();
-                const fontSize = (height / 114).toFixed(2);
-                ctx.font = `${fontSize}em sans - serif`;
-                ctx.textBaseline = 'middle';
-
-                const text = '$500,458';
-                const textX = Math.round((width - ctx.measureText(text).width) / 2);
-                const textY = height / 2;
-
-                ctx.fillText(text, textX, textY);
-                ctx.save();
-            },
-        },
-    };
-
-    const chartRef = useRef(null);
-
-    useEffect(() => {
-        const chart = chartRef.current;
-
-        if (chart) {
-            const ctx = chart.ctx;
-            const gradient1 = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient1.addColorStop(0, '#4c6ef5');
-            gradient1.addColorStop(1, '#22d3ee');
-
-            const gradient2 = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient2.addColorStop(0, '#22d3ee');
-            gradient2.addColorStop(1, '#10b981');
-
-            const gradient3 = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient3.addColorStop(0, '#10b981');
-            gradient3.addColorStop(1, '#4c6ef5');
-
-            chart.data.datasets[0].backgroundColor = [gradient1, gradient2, gradient3];
-            chart.update();
-        }
-    }, []);
-
-
     const { route } = useParams()
 
     return (
@@ -331,14 +219,9 @@ const Dashboard = () => {
                                             </svg>
                                         </div>
                                         <div className="p-4 text-right">
-                                            <p className="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">Total Users</p>
-                                            <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">{userdashboard.length} nos</h4>
+                                            <p className="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">Total Customers</p>
+                                            <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">{dashboard.totalCustomers} nos</h4>
                                         </div>
-                                        {/* <div className="border-t border-blue-gray-50 p-4">
-                                            <p className="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
-                                                <strong className="text-green-500">+55%</strong>&nbsp;than last week
-                                            </p>
-                                        </div> */}
                                     </div>
 
                                     <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
@@ -348,14 +231,9 @@ const Dashboard = () => {
                                             </svg>
                                         </div>
                                         <div className="p-4 text-right">
-                                            <p className="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">Total Hospital's</p>
-                                            <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">{hospitaldashboard.length} nos</h4>
+                                            <p className="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">Total Products</p>
+                                            <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">{dashboard.totalProducts} nos</h4>
                                         </div>
-                                        {/* <div className="border-t border-blue-gray-50 p-4">
-                                            <p className="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
-                                                <strong className="text-green-500">+3%</strong>&nbsp;than last month
-                                            </p>
-                                        </div> */}
                                     </div>
 
                                     <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
@@ -365,14 +243,9 @@ const Dashboard = () => {
                                             </svg>
                                         </div>
                                         <div className="p-4 text-right">
-                                            <p className="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">Total Doctor's</p>
-                                            <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">{dashboardlist.length} nos</h4>
+                                            <p className="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">Total Sales</p>
+                                            <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">{dashboard.totalSales} nos</h4>
                                         </div>
-                                        {/* <div className="border-t border-blue-gray-50 p-4">
-                                            <p className="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
-                                                <strong className="text-red-500">-2%</strong>&nbsp;than yesterday
-                                            </p>
-                                        </div> */}
                                     </div>
 
                                     <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
@@ -382,14 +255,9 @@ const Dashboard = () => {
                                             </svg>
                                         </div>
                                         <div className="p-4 text-right">
-                                            <p className="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">Total Blood donor's</p>
-                                            <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">{donordashboard.length} nos</h4>
+                                            <p className="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">Total Revenue</p>
+                                            <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">{dashboard.totalRevenue} nos</h4>
                                         </div>
-                                        {/* <div className="border-t border-blue-gray-50 p-4">
-                                            <p className="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
-                                                <strong className="text-green-500">+5%</strong>&nbsp;than yesterday
-                                            </p>
-                                        </div> */}
                                     </div>
                                 </div>
                             </div>
@@ -402,36 +270,19 @@ const Dashboard = () => {
 
                                         <h3 className="text-xl font-bold text-start">Revenue Updates</h3>
                                         <p className="text-start mb-4">Overview of Profit</p>
-                                        <div className="text-end mb-4">
-                                            <select
-                                                // value={filter}
-                                                onChange={(e) => setFilter(e.target.value)}
-                                                className="px-4 py-2 rounded bg-gray-200 text-gray-700"
-                                            >
-                                                <option value="Today">Today</option>
-                                                <option value="Weekly">Weekly</option>
-                                                <option value="Monthly">Monthly</option>
-                                            </select>
+                                        <div className="text-end mb-4 px-4 py-4">
+
                                         </div>
                                     </div>
                                     <div style={{ height: '300px' }}>
                                         <Line data={getFilteredData()} options={lineOptions} />
                                     </div>
                                 </div>
-
-                                {/* Pie Chart */}
-                                <div className="shadow-md p-6 rounded-lg w-full bg-white">
-                                    <h3 className="text-xl font-bold text-center">Yearly Updates</h3>
-                                    <p className="text-2xl text-center mb-4">$500,458</p>
-                                    <div style={{ height: '300px' }}>
-                                        <Pie data={pieData} options={pieOptions} ref={chartRef} />
-                                    </div>
-                                </div>
                             </div>
 
                             {/* Table Section */}
                             <div className="bg-white shadow-md rounded-lg p-6">
-                                <h3 className="text-xl font-bold mb-4">Doctor's List</h3>
+                                <h3 className="text-xl font-semibold mb-4">Latest Products</h3>
                                 <table className="min-w-full bg-white border-collapse">
                                     <thead>
                                         <tr>
@@ -441,15 +292,14 @@ const Dashboard = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {dashboardlist && dashboardlist.map((data, index) => {
+                                        {dashboard.latestProducts && dashboard.latestProducts.map((data, index) => {
                                             return (
                                                 <tr key={index}>
                                                     <td className="py-2 px-4 border-b">{index + 1}</td>
-                                                    <td className="py-2 px-4 border-b">{data.full_Name}</td>
-                                                    <td className="py-2 px-4 border-b">{data.doctor_ID}</td>
-                                                    <td className="py-2 px-4 border-b">{data.specialization}</td>
-                                                    <td className="py-2 px-4 border-b">{data.phone_Number}</td>
-                                                    <td className="py-2 px-4 border-b">{data.district}</td>
+                                                    <td className="py-2 px-4 border-b">{data.productName}</td>
+                                                    <td className="py-2 px-4 border-b">{data.description}</td>
+                                                    <td className="py-2 px-4 border-b">{data.quantity}</td>
+                                                    <td className="py-2 px-4 border-b">{data.price}</td>
                                                 </tr>
                                             )
                                         })}
