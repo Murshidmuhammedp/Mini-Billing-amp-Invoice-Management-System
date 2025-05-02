@@ -156,23 +156,23 @@ const Customers = () => {
                                 Add Customer
                             </button>
                         </div>
-                        <table className="min-w-full bg-white border-collapse">
-                            <thead>
+                        <table className="min-w-full table-auto border-collapse text-left">
+                            <thead className="bg-gray-100">
                                 <tr>
                                     {headline.map((title, index) => (
-                                        <th key={index} className="py-2 px-4 border-b">{title}</th>
+                                        <th key={index} className="py-3 px-4 border-b font-semibold text-gray-700">{title}</th>
                                     ))}
                                 </tr>
                             </thead>
                             <tbody>
                                 {customers && customers.map((user, index) => (
-                                    <tr key={user._id}>
-                                        <td className="py-2 px-4 border-b">{index + 1}</td>
-                                        <td className="py-2 px-4 border-b">{user.name}</td>
-                                        <td className="py-2 px-4 border-b">{user.email}</td>
-                                        <td className="py-2 px-4 border-b">{user.mobileNumber}</td>
-                                        <td className="py-2 px-4 border-b">{user.address.city},{user.address.state}</td>
-                                        <td className="py-2 px-4 border-b">
+                                    <tr key={user._id} className="hover:bg-gray-50">
+                                        <td className="py-3 px-4 border-b">{index + 1}</td>
+                                        <td className="py-3 px-4 border-b">{user.name}</td>
+                                        <td className="py-3 px-4 border-b">{user.email}</td>
+                                        <td className="py-3 px-4 border-b">{user.mobileNumber}</td>
+                                        <td className="py-3 px-4 border-b">{user.address.city},{user.address.state}</td>
+                                        <td className="py-3 px-4 border-b">
                                             <button
                                                 onClick={() => handleEditCustomer(user)}
                                                 className={"py-1 px-3 rounded bg-blue-500 text-white hover:bg-blue-600"}

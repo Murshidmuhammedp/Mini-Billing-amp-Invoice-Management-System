@@ -132,23 +132,23 @@ const Products = () => {
                                 Add Product
                             </button>
                         </div>
-                        <table className="min-w-full bg-white border-collapse">
-                            <thead>
+                        <table className="min-w-full table-auto border-collapse text-left">
+                            <thead className="bg-gray-100">
                                 <tr>
                                     {headline.map((title, index) => (
-                                        <th key={index} className="py-2 px-4 border-b">{title}</th>
+                                        <th key={index} className="py-2 px-4 border-b font-semibold text-gray-700">{title}</th>
                                     ))}
                                 </tr>
                             </thead>
                             <tbody>
                                 {products && products.map((product, index) => (
-                                    <tr key={product._id}>
-                                        <td className="py-2 px-4 border-b">{index + 1}</td>
-                                        <td className="py-2 px-4 border-b">{product.productName}</td>
-                                        <td className="py-2 px-4 border-b">{product.description}</td>
-                                        <td className="py-2 px-4 border-b">{product.quantity}</td>
-                                        <td className="py-2 px-4 border-b">{product.price}</td>
-                                        <td className="py-2 px-4 border-b">
+                                    <tr key={product._id} className="hover:bg-gray-50">
+                                        <td className="py-3 px-4 border-b">{index + 1}</td>
+                                        <td className="py-3 px-4 border-b">{product.productName}</td>
+                                        <td className="py-3 px-4 border-b">{product.description}</td>
+                                        <td className="py-3 px-4 border-b">{product.quantity}</td>
+                                        <td className="py-3 px-4 border-b">{product.price}</td>
+                                        <td className="py-3 px-4 border-b">
                                             <button
                                                 onClick={() => handleEditProduct(product)}
                                                 className={"py-1 px-3 rounded bg-blue-500 text-white hover:bg-blue-600"}

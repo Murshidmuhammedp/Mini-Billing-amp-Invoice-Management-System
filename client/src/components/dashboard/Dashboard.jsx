@@ -283,8 +283,8 @@ const Dashboard = () => {
                             {/* Table Section */}
                             <div className="bg-white shadow-md rounded-lg p-6">
                                 <h3 className="text-xl font-semibold mb-4">Latest Products</h3>
-                                <table className="min-w-full bg-white border-collapse">
-                                    <thead>
+                                <table className="min-w-full table-auto border-collapse text-left">
+                                    <thead className='"bg-gray-100"'>
                                         <tr>
                                             {tableheading && tableheading.map((data, index) => (
                                                 <th key={index} className="py-2 px-4 border-b">{data}</th>
