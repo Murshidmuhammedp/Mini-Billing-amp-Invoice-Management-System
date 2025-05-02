@@ -1,141 +1,97 @@
-import { JSX, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// import customAxios from "../Api/axiosInstatnce";
 import { useFormik } from "formik";
 import { RegisterSchema } from "../Validation/RegisterValidation";
+import customAxios from "../api/axiosInstance";
 
 export default function Register() {
-
+  
+  const navigate = useNavigate();
   const { handleChange, handleBlur, values, errors, handleSubmit } = useFormik({
     initialValues: {
-      fullName: "",
+      name: "",
       email: "",
-      mobile: "",
-      status: "",
       password: ""
     },
     validationSchema: RegisterSchema,
     onSubmit: async (values) => {
       try {
-        // const response = await customAxios.post("/api/auth/register", values)
+        const response = await customAxios.post("/api/auth/register", values)
         alert(response.data.message)
-        navigate('/login')
+        navigate('/')
       } catch (error) {
         console.log(error)
       }
     }
   })
-
-
-  const navigate = useNavigate();
-
+  
   return (
-    <div className="w-full flex-1  flex-col flex justify-center items-center   ">
-      <div className="relative inline-block text-[31px] font-bold  ">
-        <h1 className="relative z-50">Register</h1>
-        <span className="absolute left-0 bottom-1 w-full h-2 bg-[#fac166] z-0 "></span>
-      </div>
-
-      <form className="p-4 flex flex-col shadow-lg" onSubmit={handleSubmit}>
-        <label className="text-[18px] font-bold mt-3 ">Full Name</label>
-        <input
-          type="text"
-          className="flex-1 p-2 outline-none text-gray-700 border-2 border-[#c4c4c4] rounded-md mt-2   "
-          placeholder="Enter your name"
-          value={values.fullName}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          name="fullName"
-        />
-        {errors.fullName && <p className="text-red-500 text-sm mt-2">{errors.fullName}</p>}
-
-        <label className="text-[18px] font-bold mt-3 ">Email</label>
-        <input
-          type="text"
-          className="flex-1 p-2 outline-none text-gray-700 border-2 border-[#c4c4c4] rounded-md mt-2   "
-          placeholder="Enter your email"
-          value={values.email}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          name="email"
-        />
-        {errors.email && <p className="text-red-500 text-sm mt-2">{errors.email}</p>}
-        <label className="text-[18px] font-semibold  mt-2 ">
-          Mobile Number
-        </label>
-        <div className="flex gap-2 flex-row  ">
-
-          <input
-            type="tel"
-            placeholder="Enter your phone number"
-            className=" p-2 md:pl-10 outline-none text-gray-700 border-2 border-[#c4c4c4] rounded-md mt-2 "
-            value={values.mobile}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            name="mobile"
+    <div className="w-full min-h-screen flex items-center justify-center bg-gray-50 px-4 py-10">
+      <div className="w-full max-w-4xl flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="md:w-1/2 w-full p-6 flex items-center justify-center bg-white">
+          <img
+            src="/Inventryregister.png"
+            alt="Login Illustration"
+            className="w-full max-w-sm"
           />
         </div>
-        {errors.mobile && <p className="text-red-500 text-sm mt-2">{errors.mobile}</p>}
-        <label className="text-[18px] font-bold mt-3 ">Current Status</label>
-        <div className="flex gap-4 items-center">
-          {/* Student */}
-          <label className="flex items-center gap-2 cursor-pointer group">
+        <div className="md:w-1/2 w-full p-6">
+          <div className="text-[31px] font-semibold text-[#2A586F] mb-5 relative inline-block">
+            <h1 className="relative z-50">Register</h1>
+            <span className="absolute left-0 bottom-1 w-full h-2 bg-[#fac166] z-0"></span>
+          </div>
+          <form onSubmit={handleSubmit}>
+            <label className="text-[18px] font-bold">Full Name</label>
             <input
-              type="radio"
-              name="status"
-              value="student"
-              className="hidden group-[&:checked]:bg-[#2A586F]"
-              checked={values.status === "student"}
-              onChange={handleChange}
-              onBlur={handleBlur} />
-            <div className="w-5 h-5 border-2 border-gray-400 rounded-full flex items-center justify-center group-has-[:checked]:border-[#2A586F]">
-              <div className="w-2.5 h-2.5 bg-gray-400 rounded-full group-has-[:checked]:bg-[#2A586F]"></div>
-            </div>
-            <span className="text-black">Student</span>
-          </label>
-
-          {/* Employee */}
-          <label className="flex items-center gap-2 cursor-pointer group">
-            <input
-              type="radio"
-              name="status"
-              value="employee"
-              className="hidden"
-              checked={values.status === "employee"}
+              type="text"
+              name="name"
+              placeholder="Enter name"
+              className="w-full p-2 mt-2 border-2 border-gray-300 rounded-md outline-none"
+              value={values.name}
               onChange={handleChange}
               onBlur={handleBlur}
             />
-            <div className="w-5 h-5 border-2 border-gray-400 rounded-full flex items-center justify-center group-has-[:checked]:border-[#2A586F]">
-              <div className="w-2.5 h-2.5 bg-gray-400 rounded-full group-has-[:checked]:bg-[#2A586F]"></div>
-            </div>
-            <span className="text-black">Employee</span>
-          </label>
-        </div>
-        {errors.status && <p className="text-red-500 text-sm mt-2">{errors.status}</p>}
+            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
 
-        <label className="text-[18px] font-bold mt-3 ">Password</label>
-        <input
-          type="password"
-          className="flex-1 p-2 outline-none text-gray-700 border-2 border-[#c4c4c4] rounded-md mt-2"
-          placeholder="Enter Password"
-          value={values.password}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          name="password"
-        />
-        {errors.password && <p className="text-red-500 text-sm mt-2">{errors.password}</p>}
-        <button
-          type="submit"
-          className="mt-5 py-2 font-semibold text-[14px] bg-[#2A586F]  text-white border-2 border-[#2A586F] hover:bg-transparent hover:text-[#2A586F] rounded-md">
-          Save
-        </button>
-        <small className="text-center mt-3">
-          Already have an account?{" "}
-          <Link to={"/login"} className="text-blue-600">
-            Login Now
-          </Link>
-        </small>
-      </form>
+            <label className="text-[18px] font-bold">Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter email"
+              className="w-full p-2 mt-2 border-2 border-gray-300 rounded-md outline-none"
+              value={values.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+
+            <label className="text-[18px] font-bold mt-4 block">Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter password"
+              className="w-full p-2 mt-2 border-2 border-gray-300 rounded-md outline-none"
+              value={values.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {errors.password &&
+              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            }
+            <button
+              type="submit"
+              className="w-full mt-6 py-2 text-white bg-[#2A586F] border-2 border-[#2A586F] font-semibold text-sm rounded-md hover:bg-transparent hover:text-[#2A586F] transition-all"
+            >
+              Save
+            </button>
+            <small className="block text-center mt-4">
+              Already have an account?{" "}
+              <Link to="/" className="text-blue-600">
+                Login Now
+              </Link>
+            </small>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

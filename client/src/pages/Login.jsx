@@ -1,13 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
-// import customAxios from "../Api/axiosInstatnce";
 import { useFormik } from "formik";
 import { loginSchema } from "../Validation/LoginValidation";
+import customAxios from "../api/axiosInstance";
 
 
 export default function Login() {
 
     const navigate = useNavigate();
-
     const { handleChange, handleBlur, values, errors, handleSubmit } = useFormik({
         initialValues: {
             email: "",
@@ -16,12 +15,11 @@ export default function Login() {
         validationSchema: loginSchema,
         onSubmit: async (values) => {
             try {
-                // const response = await customAxios.post("/api/auth/login", values)
-                console.log(values, "fdxgch")
-                if (response.data.token) {
-                    localStorage.setItem("token", response.data.token);
+                const response = await customAxios.post("/api/auth/login", values)
+                if (response.data.accessToken) {
+                    localStorage.setItem("token", response.accessToken);
                     alert("Login successful!");
-                    navigate("/question");
+                    navigate("/dashboard");
                 }
             } catch (error) {
                 console.error("Login failed", error)
@@ -91,6 +89,5 @@ export default function Login() {
                 </div>
             </div>
         </div>
-
     );
 }
