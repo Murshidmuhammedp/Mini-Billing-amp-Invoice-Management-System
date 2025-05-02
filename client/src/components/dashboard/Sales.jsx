@@ -125,13 +125,20 @@ const SalesInvoice = () => {
         setShowForm(true);
     };
     const handlePayment = async (id) => {
-        console.log(id,"nthaaan")
         const response = await customAxios.patch(`/api/sales/paymentstatus/${id}`, {
             headers: {
                 Authorization: token
             }
         })
-        console.log(response, "isPaid")
+    }
+
+    const handleActive = async (id) => {
+        const response = await customAxios.patch(`/api/sales/isactive/${id}`, {
+            headers: {
+                Authorization: token
+            }
+        })
+        console.log(response, "isActive")
     }
 
     const handleSubmit = async () => {
@@ -213,14 +220,14 @@ const SalesInvoice = () => {
                                             </td>
                                             <td className="py-3 px-4 border-b">{dateOnly}</td>
                                             <td className="py-3 px-4 border-b">
-                                                <button
+                                                {/* <button
                                                     onClick={() => handleEditSales(sale)}
                                                     className={"py-1 px-3 rounded bg-blue-500 text-white hover:bg-blue-600"}
                                                 >
                                                     Edit
-                                                </button>
+                                                </button> */}
                                                 <button
-                                                    onClick={() => toggleBlock(sale._id)}
+                                                    onClick={() => handleActive(sale._id)}
                                                     className={`py-1 px-3 rounded ml-4 ${sale.isActive ? 'bg-green-500 hover:bg-green-700' : 'bg-red-500 hover:bg-red-700'
                                                         } text-white`}
                                                 >

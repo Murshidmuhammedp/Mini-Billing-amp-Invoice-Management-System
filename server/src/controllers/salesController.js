@@ -58,17 +58,43 @@ export const deleteSale = async (req, res, next) => {
 export const updateSaleIsPaid = async (req, res, next) => {
     try {
         const { id } = req.params;
-        console.log(id)
+        const { isPaid } = req.body;
+
         const sale = await Sale.findById(id);
         if (!sale) {
             return res.status(404).json({ message: "Invoice not Found" });
         }
-        console.log(sale, "sale")
-        sale.isPaid = isPaid;
+        if (typeof isPaid === "string") {
+            sale.isPaid = isPaid.toLowerCase() === "paid";
+        } else {
+            sale.isPaid = Boolean(isPaid);
+        }
+      
         await sale.save();
 
         return res.status(200).json({
             message: "Status Updated",
+            sale,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const updateSaleIsActive = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        const sale = await Sale.findById(id);
+        if (!sale) {
+            return res.status(404).json({ message: "Invoice not found" });
+        }
+        console.log(sale, "prbm")
+        sale.isActive = !sale.isActive;
+        await sale.save();
+
+        return res.status(200).json({
+            message: "Active Status Updated",
             sale,
         });
     } catch (error) {
