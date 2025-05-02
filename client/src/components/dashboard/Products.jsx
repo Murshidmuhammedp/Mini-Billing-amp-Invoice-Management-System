@@ -25,7 +25,11 @@ const Products = () => {
 
     useEffect(() => {
         const fetchProducts = async () => {
-            await customAxios.get('/api/product/products')
+            await customAxios.get('/api/product/products', {
+                headers: {
+                    Authorization: token
+                }
+            })
                 .then((result) => {
                     setProducts(result.data.products)
                 }).catch((error) => {
@@ -36,7 +40,11 @@ const Products = () => {
     }, []);
 
     const toggleBlock = async (id) => {
-        await customAxios.patch(`/api/product/islisted/${id}`)
+        await customAxios.patch(`/api/product/islisted/${id}`, {
+            headers: {
+                Authorization: token
+            }
+        })
             .then((result) => {
                 alert(result.data.message)
             }).catch((error) => {
@@ -69,10 +77,10 @@ const Products = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-            setFormData((prev) => ({
-                ...prev,
-                [name]: value
-            }));
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value
+        }));
     };
 
     const handleSubmit = async () => {

@@ -6,6 +6,7 @@ import ErrorPage from './components/Error/Errorpage'
 import Dashboard from './components/dashboard/Dashboard'
 import Customers from './components/dashboard/Customers'
 import Products from './components/dashboard/Products'
+import Sales from './components/dashboard/Sales'
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path='/Dashboard' element={< Dashboard/>} />
         <Route path='/customers' element={< Customers/>} />
         <Route path='/products' element={< Products/>} />
+        <Route path='/sales' element={< Sales/>} />
         <Route path='*' element={<ErrorPage />} />
       </Routes>
   )
