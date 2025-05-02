@@ -53,27 +53,28 @@ A full-stack web application that allows users to manage customers, products, an
 git clone https://github.com/Murshidmuhammedp/Mini-Billing-amp-Invoice-Management-System
 cd Mini-Billing-amp-Invoice-Management-System
 ```
-2. Backend Setup
+### 2. Backend Setup
 
 ```bash
 cd server
 npm install
 ```
 Create a .env file in /server:
-
+```bash
 PORT=5000
 MONGO_URI=your_mongodb_connection
 JWT_SECRET=your_jwt_secret
-
+```
 Run the server:
-
+```bash
 npm run dev
-
-3. Frontend Setup
-
+```
+### 3. Frontend Setup
+```bash
 cd ../client
 npm install
 npm start
+```
 The frontend will run on http://localhost:3000.
 
 📊 Invoice Table Example
