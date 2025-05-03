@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { RegisterSchema } from "../Validation/RegisterValidation";
 import customAxios from "../api/axiosInstance";
+import toast from "react-hot-toast";
 
 export default function Register() {
   
@@ -16,7 +17,7 @@ export default function Register() {
     onSubmit: async (values) => {
       try {
         const response = await customAxios.post("/api/auth/register", values)
-        alert(response.data.message)
+        toast.success(response.data.message)
         navigate('/')
       } catch (error) {
         console.log(error)

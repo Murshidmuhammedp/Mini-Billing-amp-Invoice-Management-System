@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import customAxios from '../../api/axiosInstance';
+import toast from 'react-hot-toast';
 
 const Products = () => {
     const headline = ["Sl. No", "Product Name", "Description", "Quantity", "Price", "Action"]
@@ -86,7 +87,7 @@ const Products = () => {
     const handleSubmit = async () => {
         const { productName, description, quantity, price } = formData;
         if (!productName || !description || !quantity || !price) {
-            alert("All fields are required");
+            toast.success("All fields are required");
             return;
         }
         try {
@@ -96,14 +97,14 @@ const Products = () => {
                         Authorization: token
                     }
                 });
-                alert("Product updated successfully");
+                toast.success("Product updated successfully");
             } else {
                 await customAxios.post('/api/product/addproduct', formData, {
                     headers: {
                         Authorization: token
                     }
                 });
-                alert("Product added successfully");
+                toast.success("Product added successfully");
             }
             setShowForm(false);
             window.location.reload();

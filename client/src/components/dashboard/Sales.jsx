@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import customAxios from '../../api/axiosInstance';
+import toast from 'react-hot-toast';
 
 const SalesInvoice = () => {
     const tableHeadings = ["Invoice No", "Customer", "Total Amount", "Payment", "Date", "Action"];
@@ -138,12 +139,11 @@ const SalesInvoice = () => {
                 Authorization: token
             }
         })
-        console.log(response, "isActive")
     }
 
     const handleSubmit = async () => {
         if (!selectedCustomer || invoiceItems.length === 0) {
-            alert("Select a customer and at least one product.");
+            toast.success("Select a customer and at least one product.");
             return;
         }
 
@@ -163,13 +163,13 @@ const SalesInvoice = () => {
             if (isEdit) {
                 await customAxios.put(`/api/invoice/${editingId}`, invoiceData,
                     { headers: { Authorization: token } });
-                alert("Invoice updated successfully");
+                toast.success("Invoice updated successfully");
             } else {
                 await customAxios.post('/api/sales/sales', invoiceData, {
                     headers:
                         { Authorization: token }
                 });
-                alert("Invoice created successfully");
+                toast.success("Invoice created successfully");
             }
             setShowForm(false);
             window.location.reload();

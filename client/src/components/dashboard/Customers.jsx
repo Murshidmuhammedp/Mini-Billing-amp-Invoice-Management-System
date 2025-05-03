@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import customAxios from '../../api/axiosInstance';
+import toast from 'react-hot-toast';
 
 const Customers = () => {
     const headline = ["Sl. No", "Name", "Email", "Mobile", "Location", "Action"]
@@ -110,7 +111,7 @@ const Customers = () => {
     const handleSubmit = async () => {
         const { name, email, mobileNumber, address } = formData;
         if (!name || !email || !mobileNumber || !address.street || !address.city || !address.state || !address.zipCode || !address.country) {
-            alert("All fields are required");
+            toast.success("All fields are required");
             return;
         }
         try {
@@ -120,14 +121,14 @@ const Customers = () => {
                         Authorization: token
                     }
                 });
-                alert("Customer updated successfully");
+                toast.success("Customer updated successfully");
             } else {
                 await customAxios.post('/api/customer/addcustomer', formData, {
                     headers: {
                         Authorization: token
                     }
                 });
-                alert("Customer added successfully");
+                toast.success("Customer added successfully");
             }
             setShowForm(false);
             window.location.reload();

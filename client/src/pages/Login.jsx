@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { loginSchema } from "../Validation/LoginValidation";
 import customAxios from "../api/axiosInstance";
+import toast from "react-hot-toast";
 
 
 export default function Login() {
@@ -18,7 +19,7 @@ export default function Login() {
                 const response = await customAxios.post("/api/auth/login", values)
                 if (response.data.accessToken) {
                     localStorage.setItem("token", response.data.accessToken);
-                    alert("Login successful!");
+                    toast.success("Login successful!");
                     navigate("/dashboard");
                 }
             } catch (error) {
