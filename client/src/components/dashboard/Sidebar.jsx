@@ -1,13 +1,20 @@
 import React from 'react';
 import { FaTachometerAlt, FaUsers, FaClipboardList, FaSignOutAlt, FaBars, FaBoxOpen } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
+import customAxios from '../../api/axiosInstance';
+import toast from 'react-hot-toast';
 
 const Sidebar = ({ sidebarOpen, toggleSidebar }) => {
 
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        console.log("Logging out...");
+    const handleLogout = async () => {
+        try {
+            const response = await customAxios.post('/api/auth/logout')
+            toast.success(response.data.message);
+        } catch (error) {
+            console.log(error)
+        }
     };
 
     return (
