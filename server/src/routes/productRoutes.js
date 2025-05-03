@@ -9,7 +9,7 @@ productRouter.get("/products", getAllProducts);
 productRouter.get("/product/:id", getProductById);
 productRouter.put("/updateproduct/:id", verifyToken, updateProduct);
 productRouter.delete("/deleteproduct/:id", deleteProduct);
-productRouter.patch("/islisted/:id", verifyToken, productblock);
+productRouter.patch("/islisted/:id", productblock);
 
 
 

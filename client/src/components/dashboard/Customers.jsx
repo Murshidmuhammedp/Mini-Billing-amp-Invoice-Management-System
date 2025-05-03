@@ -43,12 +43,19 @@ const Customers = () => {
     }, []);
 
     const toggleBlock = async (id) => {
-        await customAxios.patch(`/api/customer/block/${id}`)
-            .then((result) => {
-                alert(result.data.message)
-            }).catch((error) => {
-                console.log(error);
-            })
+        try {
+            const response = await customAxios.patch(`/api/customer/block/${id}`);
+            toast.success(response.data.message);
+            setCustomers((prevCustomers) =>
+                prevCustomers.map((customer) =>
+                    customer._id === id
+                        ? { ...customer, isBlocked: !customer.isBlocked }
+                        : customer
+                )
+            );
+        } catch (error) {
+            console.log(error)
+        }
     };
 
     const handleAddCustomer = () => {
@@ -117,9 +124,7 @@ const Customers = () => {
         try {
             if (isEdit) {
                 await customAxios.put(`/api/customer/updatecustomer/${editingId}`, formData, {
-                    headers: {
-                        Authorization: token
-                    }
+                    headers: { Authorization: token }
                 });
                 toast.success("Customer updated successfully");
             } else {

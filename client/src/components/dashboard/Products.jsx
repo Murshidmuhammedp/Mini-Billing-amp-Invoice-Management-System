@@ -41,16 +41,18 @@ const Products = () => {
     }, []);
 
     const toggleBlock = async (id) => {
-        await customAxios.patch(`/api/product/islisted/${id}`, {
-            headers: {
-                Authorization: token
-            }
-        })
-            .then((result) => {
-                alert(result.data.message)
-            }).catch((error) => {
-                console.log(error);
-            })
+        try {
+            const response = await customAxios.patch(`/api/product/islisted/${id}`, { headers: { Authorization: token } })
+            toast.success(response.data.message);
+            setProducts((prevCustomers) =>
+                prevCustomers.map((product) =>
+                    product._id == id
+                        ? { ...product, isListed: !product.isListed } : product
+                )
+            )
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const handleAddProduct = () => {

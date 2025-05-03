@@ -118,7 +118,7 @@ export const productblock = async (req, res, next) => {
         await product.save();
 
         return res.status(200).json({
-            message: product.isListed ? "listed" : "Unblisted",
+            message: product.isListed ? "Listed" : "Unlisted",
             product,
         });
     } catch (error) {
